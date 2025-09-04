@@ -2,6 +2,7 @@ import { createContext, useEffect, useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 
+
 //   using Clerk, import these hooks
 import { useUser, useAuth } from "@clerk/clerk-react";
 
@@ -64,8 +65,7 @@ export const AppContextProvider = (props) => {
   const fetchUserData = async () => {
     try {
       const token = await getToken();
-      const { data } = await axios.get(
-        backendUrl + "/api/user/user",
+      const { data } = await axios.get(backendUrl + "/api/users/user",
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
@@ -80,6 +80,8 @@ export const AppContextProvider = (props) => {
     }
   };
 
+
+  // function 
   //  Run fetchJobs on mount
   useEffect(() => {
     fetchJobs();
@@ -93,6 +95,8 @@ export const AppContextProvider = (props) => {
       fetchCompanyData();
     }
   }, [companyToken]);
+
+
 
   // Fetch user data if logged in
   useEffect(() => {

@@ -5,13 +5,14 @@ import cors from 'cors';
 import dotenv from "dotenv";
 dotenv.config();
 import connection from './config/db.js';
-import clerkWebhooks  from './controllers/webhooks.js';
+
 import connectCloudinary from './config/cloudinary.js';
 //import Sentry from './config/sentry.js';
 import companyRoutes from './routes/companyRoutes.js';
 import jobRoutes from './routes/jobRoutes.js';
 import userRoutes from './routes/userRoutes.js'
 import  {clerkMiddleware} from '@clerk/express';
+import  clerkWebhooks  from './controllers/webhooks.js';
 
 
 
@@ -33,7 +34,7 @@ const PORT = process.env.PORT || 5000;
     app.get('/', (req, res) => res.send('SERVER WORKING'));
 
     // Webhooks route
-    app.post('/webhooks', express.json(), clerkWebhooks);
+    app.post('/webhooks', clerkWebhooks);
 
     // Company API routes
     app.use('/api/company', companyRoutes);
