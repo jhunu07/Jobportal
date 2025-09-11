@@ -39,7 +39,7 @@ const PORT = process.env.PORT || 5000;
     // Company API routes
     app.use('/api/company', companyRoutes);
     app.use('/api/jobs',jobRoutes )
-    app.use('/api/user', userRoutes);
+    app.use('/api/users', userRoutes);
 
     // Start Server
     app.listen(PORT, () => {

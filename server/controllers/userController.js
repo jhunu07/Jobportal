@@ -5,20 +5,27 @@ import Job from "../models/Job.js";
 import { v2 as cloudinary } from "cloudinary";
 
 // Get user data
+// Get user data
 export const getUserData = async (req, res) => {
-  const userId = req.auth?.userId; // Clerk ID
   try {
-    const user = await User.findOne({ clerkId: userId });
-
-    if (!user) {
-      return res.status(404).json({ success: false, message: "User not found" });
+    const userId = req.auth?.userId; // Clerk userId
+    if (!userId) {
+      return res.status(401).json({ success: false, message: "Unauthorized: No Clerk userId found" });
     }
 
-    res.status(200).json({ success: true, user });
+    // Since Clerk ID is stored as _id in your schema
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ success: false, message: "User not found in database" });
+    }
+
+    return res.status(200).json({ success: true, user });
   } catch (err) {
-    res.status(500).json({ success: false, message: err.message });
+    return res.status(500).json({ success: false, message: err.message });
   }
 };
+
 
 
 //Apply for job 
@@ -82,7 +89,7 @@ export const getUserApplications = async (req, res) => {
 export const updateUserResume = async (req, res) => {
     try {
         const userId = req.auth.userId; // Assuming you're using Clerk for authentication
-        const resumeFile = req.resumeFile; // Assuming you're using multer for file uploads
+        const resumeFile = req.file; // Assuming you're using multer for file uploads
         const userData = await User.findById(userId);
         if (resumeFile) {
             const resumeUpload = await cloudinary.uploader.upload(resumeFile.path); // Assuming multer stores the file path in req.file.path

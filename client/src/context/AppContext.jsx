@@ -1,10 +1,12 @@
 import { createContext, useEffect, useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { useUser,useAuth } from "@clerk/clerk-react";
+
 
 
 //   using Clerk, import these hooks
-import { useUser, useAuth } from "@clerk/clerk-react";
+
 
 export const AppContext = createContext();
 
@@ -24,6 +26,7 @@ export const AppContextProvider = (props) => {
   const [showRecruiterLogin, setShowRecruiterLogin] = useState(false);
   const [companyToken, setCompanyToken] = useState(null);
   const [companyData, setCompanyData] = useState(null);
+
   const [userData, setUserData] = useState(null);
   const [userApplications, setUserApplications] = useState([]);
 
@@ -65,13 +68,13 @@ export const AppContextProvider = (props) => {
   const fetchUserData = async () => {
     try {
       const token = await getToken();
-      const { data } = await axios.get(backendUrl + "/api/users/user",
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+
+      const { data } = await axios.get(backendUrl + '/api/users/user',
+        { headers: { Authorization: `Bearer ${token}` } } );
 
       if (data.success) {
         setUserData(data.user);
-        setUserApplications(data.applications || []); // in case you return applications
+       
       } else {
         toast.error(data.message);
       }
@@ -81,7 +84,26 @@ export const AppContextProvider = (props) => {
   };
 
 
-  // function 
+  // Function to fetch use applied data
+
+  const fetchUserApplications = async () => {
+     try {
+      const token = await getToken();
+      const {data} = await axios.get(backendUrl +'/api/users/applications',
+      {headers: {Authorization: `Bearer ${token}`}})
+
+      if(data.success){
+        setUserApplications(data.applications)
+      }else{
+        toast.error(data.message)
+      }
+
+
+     } catch (error) {
+      toast.error(error.message)
+     }
+       }
+
   //  Run fetchJobs on mount
   useEffect(() => {
     fetchJobs();
@@ -102,6 +124,7 @@ export const AppContextProvider = (props) => {
   useEffect(() => {
     if (user) {
       fetchUserData();
+      fetchUserApplications();
     }
   }, [user]);
 
@@ -126,6 +149,9 @@ export const AppContextProvider = (props) => {
     userApplications,
     setUserApplications,
     backendUrl,
+    fetchUserData,
+    fetchUserApplications,
+   
   };
 
   return (
