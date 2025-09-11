@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { AppContext } from '../context/AppContext';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import Loading from '../components/Loading';
 
 
 
@@ -12,7 +13,7 @@ import { toast } from 'react-toastify';
 
 const ManageJobs = () => {
   const navigate = useNavigate()
-  const [jobs, setJobs] = useState([]);
+  const [jobs, setJobs] = useState(false);
   const { backendUrl, companyToken } = useContext(AppContext)
 
   // Function to fetch job application 
@@ -69,7 +70,12 @@ const ManageJobs = () => {
     }
   }
     , [companyToken]);
-  return (
+  return jobs ? jobs.length  === 0 ?
+  (
+  <div className='flex item-center justify-center h-[70vh]' > 
+  <p className='text-xl sm:text-2xl' >No Job Posted</p> 
+   </div>
+   ) :  (
     <div className='container p-4 max-w-5xl mx-auto'>
       <div className='overflow-x-auto'>
         <table className="min-w-full border border-gray-300 text-sm">
@@ -104,7 +110,7 @@ const ManageJobs = () => {
           className='bg-blue-500 rounded text-white p-2'> ADD NEW JOB</button>
       </div>
     </div>
-  );
+  ) : <Loading />
 };
 
 export default ManageJobs;

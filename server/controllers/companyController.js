@@ -3,7 +3,7 @@ import bcrypt from 'bcrypt';
 import { v2 as cloudinary } from "cloudinary";
 import generateToken from "../utils/generateToken.js";
 import Job from "../models/Job.js";
-import JobApplication from '../models/JobApplication.js'; 
+import JobApplication from '../models/JobApplication.js';
 
 
 // Register a company
@@ -159,15 +159,15 @@ export const getCompanyJobApplicants = async (req, res) => {
     const companyId = req.company._id;
 
     const applications = await JobApplication.find({ companyId })
-    .populate('userId', 'name image resume')
-    .populate('jobId', 'title  location category  level salary')
-    .exec()
+      .populate('userId', 'name image resume')
+      .populate('jobId', 'title  location category  level salary')
+      .exec()
     return res.json({ success: true, applications });
 
   } catch (error) {
     res.json({ success: false, message: error.message })
   }
- };
+};
 
 // get company posted job
 export const getCompanyPostedJobs = async (req, res) => {
@@ -193,20 +193,22 @@ export const getCompanyPostedJobs = async (req, res) => {
 };
 
 // change job application status
-export const ChangeJobApplicationsStatus = (req, res) => {
+export const ChangeJobApplicationsStatus =  async (req, res) => {
   try {
-  const { id, status } = req.body;
+    const { id, status } = req.body
 
-  // Find Job application and update status
-   JobApplication.findOneAndUpdate({ _id: id }, { status });
+    // Find Job application and update status
+    await JobApplication.findOneAndUpdate({ _id: id }, { status });
 
-  res.json({ success: true, message: 'Status Changed' });
+    res.json({ success: true, message: 'Status Changed' });
 
-} catch (error) {
-  res.json({ success: false, message: error.message });
-}
+  } catch (error) {
+    res.json({ success: false, message: error.message });
+  }
 
 };
+
+
 
 // manage visibility
 export const changeVisiblity = async (req, res) => {
