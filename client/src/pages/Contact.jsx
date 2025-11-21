@@ -94,8 +94,8 @@ const Contact = () => {
             <h3 className="text-2xl font-semibold text-gray-800 mb-2">Head Office</h3>
             <p className="text-gray-600">
               JobPortal HQ<br />
-              123 Career Lane, Suite 500<br />
-              New York, NY 10001, USA
+             Gondal Rajkot <br />
+              Gujarat, 360003, INDIA
             </p>
           </div>
 
