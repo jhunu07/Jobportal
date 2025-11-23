@@ -11,7 +11,7 @@ import Dashboard from "./pages/Dashboard";
 import ManageJobs from "./pages/ManageJobs";
 import AddJob from "./pages/AddJob";
 import ViewApplications from "./pages/ViewApplications";
- import { ToastContainer, toast } from 'react-toastify';
+ import { ToastContainer } from 'react-toastify';
 import "quill/dist/quill.snow.css";
 
 const App = () => {

@@ -129,8 +129,8 @@ npm install
 
 ```bash
 # In one terminal
-dcd server
-npm run sever
+cd server
+npm run server
 
 # In another terminal
 cd client

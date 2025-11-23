@@ -1,4 +1,4 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, useEffect, useState, useCallback } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { useUser,useAuth } from "@clerk/clerk-react";
@@ -31,7 +31,7 @@ export const AppContextProvider = (props) => {
   const [userApplications, setUserApplications] = useState([]);
 
   //  fetch jobs
-  const fetchJobs = async () => {
+  const fetchJobs = useCallback(async () => {
     try {
       const { data } = await axios.get(backendUrl + "/api/jobs");
 
@@ -44,10 +44,10 @@ export const AppContextProvider = (props) => {
     } catch (error) {
       toast.error(error.message);
     }
-  };
+  }, [backendUrl]);
 
   //  fetch company data
-  const fetchCompanyData = async () => {
+  const fetchCompanyData = useCallback(async () => {
     try {
       const { data } = await axios.get(
         backendUrl + "/api/company/company",
@@ -62,10 +62,10 @@ export const AppContextProvider = (props) => {
     } catch (error) {
       toast.error(error.message);
     }
-  };
+  }, [backendUrl, companyToken]);
 
   //  fetch user data
-  const fetchUserData = async () => {
+  const fetchUserData = useCallback(async () => {
     try {
       const token = await getToken();
 
@@ -81,12 +81,12 @@ export const AppContextProvider = (props) => {
     } catch (error) {
       toast.error(error.message);
     }
-  };
+  }, [backendUrl, getToken]);
 
 
   // Function to fetch use applied data
 
-  const fetchUserApplications = async () => {
+  const fetchUserApplications = useCallback(async () => {
      try {
       const token = await getToken();
       const {data} = await axios.get(backendUrl +'/api/users/applications',
@@ -102,21 +102,21 @@ export const AppContextProvider = (props) => {
      } catch (error) {
       toast.error(error.message)
      }
-       }
+       }, [backendUrl, getToken]);
 
   //  Run fetchJobs on mount
   useEffect(() => {
     fetchJobs();
     const storedToken = localStorage.getItem("companyToken");
     if (storedToken) setCompanyToken(storedToken);
-  }, []);
+  }, [fetchJobs]);
 
   //  Fetch company data when companyToken exists
   useEffect(() => {
     if (companyToken) {
       fetchCompanyData();
     }
-  }, [companyToken]);
+  }, [companyToken, fetchCompanyData]);
 
 
 
@@ -126,7 +126,7 @@ export const AppContextProvider = (props) => {
       fetchUserData();
       fetchUserApplications();
     }
-  }, [user]);
+  }, [user, fetchUserData, fetchUserApplications]);
 
 
 
