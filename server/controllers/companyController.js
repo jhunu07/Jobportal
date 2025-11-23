@@ -166,9 +166,10 @@ export const postJob = async (req, res) => {
       job: newJob
     });
   } catch (error) {
+    console.error('Error posting job:', error);
     res.json({
       success: false,
-      message: 'Failed to post job'
+      message: error.message || 'Failed to post job'
     });
 
   }
