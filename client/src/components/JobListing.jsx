@@ -58,7 +58,7 @@ const handleLocationChange = (location) => {
                 <span className="inline-flex items-center gap-3 bg-blue-50 border-blue-200 px-4 py-1.5 rounded">
                   {searchFilter.title}
                   <img
-                    onClick={(e) =>
+                    onClick={() =>
                       setSearchFilter((prev) => ({ ...prev, title: "" }))
                     }
                     className="cursor-pointer"
@@ -72,7 +72,7 @@ const handleLocationChange = (location) => {
                 <span className=" ml-2 inline-flex items-center gap-3  bg-red-50 border-red-200 px-4 py-1.5 rounded">
                   {searchFilter.location}
                   <img
-                    onClick={(e) =>
+                    onClick={() =>
                       setSearchFilter((prev) => ({ ...prev, location: "" }))
                     }
                     className="cursor-pointer"
@@ -84,7 +84,7 @@ const handleLocationChange = (location) => {
             </div>
           </>
         )}
-        <button onClick={e=>setShowFilter(prev =>!prev)} className="px-6 py-1.5 rounded border-gray-400 lg:hidden">
+        <button onClick={()=>setShowFilter(prev =>!prev)} className="px-6 py-1.5 rounded border-gray-400 lg:hidden">
           {showFilter ? 'Close' : 'Filter'}
           </button>
 

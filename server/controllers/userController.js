@@ -36,6 +36,11 @@ export const applyForJob = async (req, res) => {
     const userId = req.auth.userId; // Assuming you're using Clerk for authentication
 
     try {
+        // Validate jobId
+        if (!jobId) {
+            return res.json({ success: false, message: 'Job ID is required' });
+        }
+
         // Check if the user has already applied for this job
 
         const isAlreadyApplied = await JobApplication.find({ userId, jobId });
@@ -90,7 +95,16 @@ export const updateUserResume = async (req, res) => {
     try {
         const userId = req.auth.userId; // Assuming you're using Clerk for authentication
         const resumeFile = req.file; // Assuming you're using multer for file uploads
+        
+        if (!resumeFile) {
+            return res.json({ success: false, message: 'Resume file is required' });
+        }
+
         const userData = await User.findById(userId);
+        if (!userData) {
+            return res.json({ success: false, message: 'User not found' });
+        }
+
         if (resumeFile) {
             const resumeUpload = await cloudinary.uploader.upload(resumeFile.path); // Assuming multer stores the file path in req.file.path
             userData.resume = resumeUpload.secure_url

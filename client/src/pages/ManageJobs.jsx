@@ -1,5 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { assets, manageJobsData } from '../assets/assets';
+import React, { useContext, useEffect, useState, useCallback } from 'react';
 import moment from 'moment';
 import { useNavigate } from 'react-router-dom';
 import { AppContext } from '../context/AppContext';
@@ -18,7 +17,7 @@ const ManageJobs = () => {
 
   // Function to fetch job application 
 
-  const fetchCompanyJobs = async () => {
+  const fetchCompanyJobs = useCallback(async () => {
     try {
       const { data } = await axios.get(backendUrl + '/api/company/list-jobs',
         { headers: { token: companyToken } }
@@ -40,7 +39,7 @@ const ManageJobs = () => {
 
     }
 
-  }
+  }, [backendUrl, companyToken]);
   // Fun to change job visiblity
   const changeJobVisibility = async (id) => {
     try {
@@ -69,7 +68,7 @@ const ManageJobs = () => {
       fetchCompanyJobs();
     }
   }
-    , [companyToken]);
+    , [companyToken, fetchCompanyJobs]);
   return jobs ? jobs.length  === 0 ?
   (
   <div className='flex item-center justify-center h-[70vh]' > 
