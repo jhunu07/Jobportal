@@ -11,6 +11,22 @@ export const registerCompany = async (req, res) => {
   const { name, email, password } = req.body;
 
   try {
+    // Validate required fields
+    if (!name || !email || !password) {
+      return res.json({ success: false, message: "All fields are required" });
+    }
+
+    // Basic email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return res.json({ success: false, message: "Invalid email format" });
+    }
+
+    // Password strength validation
+    if (password.length < 6) {
+      return res.json({ success: false, message: "Password must be at least 6 characters" });
+    }
+
     const companyExists = await Company.findOne({ email });
     if (companyExists) {
       return res.json({ success: false, message: "Company already exists" });
@@ -125,6 +141,14 @@ export const postJob = async (req, res) => {
   const companyId = req.company._id;
 
   try {
+    // Validate required fields
+    if (!title || !description || !location || !salary || !level || !category) {
+      return res.json({
+        success: false,
+        message: 'All fields are required'
+      });
+    }
+
     const newJob = new Job({
       title,
       description,
@@ -144,7 +168,7 @@ export const postJob = async (req, res) => {
   } catch (error) {
     res.json({
       success: false,
-
+      message: 'Failed to post job'
     });
 
   }
@@ -197,6 +221,17 @@ export const ChangeJobApplicationsStatus =  async (req, res) => {
   try {
     const { id, status } = req.body
 
+    // Validate input
+    if (!id || !status) {
+      return res.json({ success: false, message: 'Application ID and status are required' });
+    }
+
+    // Validate status value
+    const validStatuses = ['Pending', 'Accepted', 'Rejected'];
+    if (!validStatuses.includes(status)) {
+      return res.json({ success: false, message: 'Invalid status value' });
+    }
+
     // Find Job application and update status
     await JobApplication.findOneAndUpdate({ _id: id }, { status });
 
@@ -214,9 +249,23 @@ export const ChangeJobApplicationsStatus =  async (req, res) => {
 export const changeVisiblity = async (req, res) => {
   try {
     const { id } = req.body;
+    
+    if (!id) {
+      return res.json({
+        success: false,
+        message: 'Job ID is required'
+      });
+    }
+
     const companyId = req.company._id;
     const job = await Job.findById(id);
 
+    if (!job) {
+      return res.json({
+        success: false,
+        message: 'Job not found'
+      });
+    }
 
     if (companyId.toString() === job.companyId.toString()) {
       job.visible = !job.visible;
