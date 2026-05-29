@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://jobportal-seven-alpha.vercel.app/sitemap.xml
