@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useState, useEffect, useCallback } from 'react';
 import { assets } from '../assets/assets';
 import { AppContext } from '../context/AppContext';
 import axios from 'axios';
@@ -11,7 +11,7 @@ const ViewApplications = () => {
   const [applicants, setApplicants] = useState(false);
 
   // fetch company job application data
-  const fetchCompanyJobApplications = async () => {
+  const fetchCompanyJobApplications = useCallback(async () => {
     try {
       const { data } = await axios.get(backendUrl + '/api/company/applicants',
         { headers: { token: companyToken } }
@@ -24,7 +24,7 @@ const ViewApplications = () => {
     } catch (error) {
       toast.error(error.message);
     }
-  };
+  }, [backendUrl, companyToken]);
 
 
 
@@ -53,7 +53,7 @@ const ViewApplications = () => {
     if (companyToken) {
       fetchCompanyJobApplications();
     }
-  }, [companyToken]);
+  }, [companyToken, fetchCompanyJobApplications]);
 
   // render
   return applicants ? (

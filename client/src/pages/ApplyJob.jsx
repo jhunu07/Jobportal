@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useState, useEffect, useCallback } from "react";
 import {  useNavigate, useParams } from "react-router-dom";
 import { AppContext } from "../context/AppContext";
 import Loading from "../components/Loading";
@@ -24,7 +24,7 @@ const navigate =  useNavigate()
 
 
 
-  const fetchJob = async () => {
+  const fetchJob = useCallback(async () => {
     try {
       const {data} =await  axios.get(backendUrl +`/api/jobs/${id}`);
    if (data.success) {
@@ -37,7 +37,7 @@ const navigate =  useNavigate()
     } catch (error) {
       toast.error(error.message);
       
-    }}
+    }}, [backendUrl, id]);
 
 
      const applyHandler = async () =>{
@@ -69,21 +69,21 @@ const navigate =  useNavigate()
       }
      }
 
-const checkAlreadyApplied = () =>{
+const checkAlreadyApplied = useCallback(() =>{
   const hasApplied = userApplications.some( item => item.jobId._id === JobData._id)
   setIsAlreadyApplied(hasApplied)
-}
+}, [userApplications, JobData]);
 
   useEffect(() => {
       fetchJob();
-  }, [id]);
+  }, [id, fetchJob]);
 
   useEffect(() =>{
     if (userApplications.length > 0 && JobData ) {
       checkAlreadyApplied()
     }
 
-  },[userApplications,JobData,id])
+  },[userApplications, JobData, id, checkAlreadyApplied])
 
   return JobData ? (
     <>

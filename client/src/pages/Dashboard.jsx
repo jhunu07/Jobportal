@@ -25,7 +25,7 @@ const Dashboard = () => {
       navigate('/dashboard/manage-jobs');
 
     }
-  }, [])
+  }, [companyData, navigate])
 
   return (
     <div className="min-h-screen">

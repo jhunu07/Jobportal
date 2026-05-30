@@ -3,7 +3,7 @@ import { assets } from "../assets/assets";
 import { AppContext } from "../context/AppContext";
 
 const Hero = () => {
-  const { searchFilter, setSearchFilter, setIsSearched } = useContext(AppContext); // ✅ FIXED
+  const { setSearchFilter, setIsSearched } = useContext(AppContext); // ✅ FIXED
   const titleRef = useRef(null);
   const locationRef = useRef(null);
 
