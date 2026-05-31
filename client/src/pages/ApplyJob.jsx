@@ -18,9 +18,14 @@ const ApplyJob = () => {
 const navigate =  useNavigate()
 
   const [JobData, setJobData] = useState(null);
-  const [isAlreadyApplied, setIsAlreadyApplied] = useState(false);  
+  const [isAlreadyApplied, setIsAlreadyApplied] = useState(false);
+  const [imgError, setImgError] = useState(false);
 
   const { jobs ,backendUrl,userData, userApplications,fetchUserApplications } = useContext(AppContext);
+
+  const getInitials = (name) => {
+    return name?.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2) || 'CO'
+  }
 
 
 
@@ -29,14 +34,15 @@ const navigate =  useNavigate()
       const {data} =await  axios.get(backendUrl +`/api/jobs/${id}`);
    if (data.success) {
       setJobData(data.job);
-      
+      console.log('Job Data:', data.job);
+      console.log('Company Image URL:', data.job?.companyId?.image);
     }else{
       toast.error(data.message);
     }
-  
+
     } catch (error) {
       toast.error(error.message);
-      
+
     }}
 
 
@@ -93,7 +99,18 @@ const checkAlreadyApplied = () =>{
         <div className="bg-white text-black rounded-lg  w-full">
           <div className="flex  justify-center  md:justify-between flex-wrap gap-8 px-14 py-20 mb-6 bg-sky-50 border border-sky-500 rounded-xl">
             <div className="flex flex-col md:flex-row items-center">
-              <img className="h-24 bg-white rounded-lg p-4 mr-4 max-md:mb-4 border" src={JobData.companyId.image} alt="" />
+              {!imgError && JobData?.companyId?.image ? (
+                <img
+                  className="h-24 w-24 bg-white rounded-lg p-4 mr-4 max-md:mb-4 border object-contain"
+                  src={JobData.companyId.image}
+                  alt="Company logo"
+                  onError={() => setImgError(true)}
+                />
+              ) : (
+                <div className="h-24 w-24 bg-white rounded-lg p-4 mr-4 max-md:mb-4 border bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center text-white font-bold text-2xl">
+                  {getInitials(JobData?.companyId?.name)}
+                </div>
+              )}
               <div className="text-center md:text-left text-neutral-700">
                 <h1 className="text-2xl sm:text-3xl font-bold">{JobData.title}</h1>
                 <div className="flex flex-row flex-wrap  max-md:justify-center gap-y-2 gap-6 items-center text-gray-600 mt-2" >

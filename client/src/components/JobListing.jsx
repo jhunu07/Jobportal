@@ -129,7 +129,7 @@ const handleLocationChange = (location) => {
                <section className="w-full lg:w-3/4 text-gray-800 max-lg:px-4">
               <h3 className="font-medium text-3xl py-2" id ='job-list' >Latest job</h3>
               <p className="mb-8"> Get your desire job </p>
-              <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-6">
              
               {filteredJobs.slice((currrentPage -1)*6,currrentPage*6).map((job,index) => (
                 <JobCard key=  {index} job = {job} />

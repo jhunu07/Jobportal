@@ -1,17 +1,18 @@
-import React, { useContext } from "react";
+import React, { useContext, Suspense, lazy } from "react";
 import { Route, Routes } from "react-router-dom";
-import Home from "./pages/Home";
-import Applications from "./pages/Applications";
-import ApplyJob from "./pages/ApplyJob";
-import Contact from "./pages/Contact";
-import About from "./pages/About";
+const Home = lazy(() => import("./pages/Home"));
+const Applications = lazy(() => import("./pages/Applications"));
+const ApplyJob = lazy(() => import("./pages/ApplyJob"));
+const Contact = lazy(() => import("./pages/Contact"));
+const About = lazy(() => import("./pages/About"));
 import { AppContext } from "./context/AppContext";
-import RecruiterLogin from "./components/RecruiterLogin";
-import Dashboard from "./pages/Dashboard";
-import ManageJobs from "./pages/ManageJobs";
-import AddJob from "./pages/AddJob";
-import ViewApplications from "./pages/ViewApplications";
- import { ToastContainer, toast } from 'react-toastify';
+const RecruiterLogin = lazy(() => import("./components/RecruiterLogin"));
+const Dashboard = lazy(() => import("./pages/Dashboard"));
+const ManageJobs = lazy(() => import("./pages/ManageJobs"));
+const AddJob = lazy(() => import("./pages/AddJob"));
+const ViewApplications = lazy(() => import("./pages/ViewApplications"));
+import { ToastContainer } from 'react-toastify';
+import Loading from "./components/Loading";
 import "quill/dist/quill.snow.css";
 
 const App = () => {
@@ -21,30 +22,29 @@ const App = () => {
       <div>
         {showRecruiterLogin && <RecruiterLogin />}
         <ToastContainer  />
-        
-        {/* Define your routes here */}
-        <Routes>
+        <Suspense fallback={<Loading/>}>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/apply-job/:id" element={<ApplyJob />} />
+            <Route path="/applications" element={<Applications />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/about" element={<About />} />
 
-          <Route path="/" element={<Home />} />
-          <Route path="/apply-job/:id" element={<ApplyJob />} />
-          <Route path="/applications" element={<Applications />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/about" element={<About />} />
-          
-          <Route path="/dashboard" element={<Dashboard />} >
+            <Route path="/dashboard" element={<Dashboard />} >
 
-          {
-          companyToken ?
-           <>
-            <Route path="manage-jobs" element={<ManageJobs />} />
-            <Route path="add-job" element={<AddJob />} />
-            <Route path="view-applications" element={<ViewApplications />} />
-          </>:null
-          }
-           
-          </Route>
+            {
+            companyToken ?
+             <>
+              <Route path="manage-jobs" element={<ManageJobs />} />
+              <Route path="add-job" element={<AddJob />} />
+              <Route path="view-applications" element={<ViewApplications />} />
+            </>:null
+            }
+             
+            </Route>
 
-        </Routes>
+          </Routes>
+        </Suspense>
       </div>
     </> 
   );
